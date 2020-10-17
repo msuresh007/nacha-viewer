@@ -70,6 +70,9 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
              <HR/>
              <PRE>${achFileParserObj.achFileRawText}</PRE>
              <HR/>
+             Is File valid: ${achFileParserObj.isFileValid} <br/>
+             Error Info: ${achFileParserObj.errorInfo} <br/>
+
              end of the file
         </BODY>
         </HTML>`;
