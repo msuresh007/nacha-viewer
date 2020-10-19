@@ -1,3 +1,7 @@
+import { ENGINE_METHOD_DIGESTS } from 'constants';
+import { stringify } from 'querystring';
+import { start } from 'repl';
+import { EnvironmentVariableMutatorType } from 'vscode';
 import { ArrayUtil } from './arrayUtil';
 
 export class AchFileParser {
@@ -5,14 +9,32 @@ export class AchFileParser {
 
     public readonly achFileRawText:string;
 
+
+    // file header record fields
+    public get immediateDestination() { return this.getFileHeaderField(3, 13);  }
+    public get immediateOrigin() { return this.getFileHeaderField(13, 23);  }
+    public get fileCreationDate() { return this.getFileHeaderField(23, 29);  }
+    public get fileCreationTime() { return this.getFileHeaderField(29, 33);  }
+    public get immediateDestinationName() { return this.getFileHeaderField(40, 63);  }
+    public get immediateOriginName() { return this.getFileHeaderField(63, 86);  }
+
+    // file control record fields
+    public get batchCount() { return parseInt(this.getFileControlField(1, 7));  }
+    public get entryAddendaCount() { return parseInt(this.getFileControlField(13, 21));  }
+    public get totalDebitAmountsInFile() { return this.getMoneyFromAchFormattedString(this.getFileControlField(31, 43));  }
+    public get totalCreditAmountsInFile() { return this.getMoneyFromAchFormattedString(this.getFileControlField(43, 55));  }
+    
+
     public constructor(rawText:string)   {
         this.achFileRawText = rawText;
         this._indLines = this.achFileRawText.split('\n');
         
         if (this.validateTheRawText()) {
+            //assigning the first and last lines to fileHeaderRecord and fileControlRecord
+            // this._fileHeaderRecord = this._indLines[0];
+            // this._fileControlRecord = this._indLines[this._indLines.length - 1];
             this.parseRawText();
         }
-
     }
 
     public get isFileValid():boolean {
@@ -27,7 +49,9 @@ export class AchFileParser {
     //non-public elements
 
     protected  _isFileContentValid:boolean = false;
-    protected _errorInfo:string = "";
+    protected _errorInfo:string = "";    
+//    protected readonly _fileHeaderRecord:string = "";
+    //protected readonly _fileControlRecord:string ="";
     protected readonly _indLines: string[];
     protected readonly eachLineExpectedLength:number = 94;
 
@@ -144,7 +168,7 @@ export class AchFileParser {
 
             // did not write rules for detail and detail addenda records yet
 
-        }   //end of for loop of individual lines
+            }   //end of for loop of individual lines
 
 
 
@@ -152,10 +176,28 @@ export class AchFileParser {
         return true;
     }    
 
-    protected parseRawText()
+    protected parseRawText() : void
     {
-
+        //this.achFileRawText.substr()
     }
+
+    protected getFileHeaderField(startPos:number, endPos: number): string {
+        return this._indLines[0].substring(startPos, endPos);
+    }
+
+    protected getFileControlField(startPos:number, endPos: number): string {
+        return this._indLines[this._indLines.length - 1].substring(startPos, endPos);
+    }
+
+    //achformattedstring is dollars followed by 2 cents. $$$$$$$$cc
+    protected getMoneyFromAchFormattedString(strAmount: string): number {
+        let strLen = strAmount.length;
+        let dollarNums = strAmount.substring(0, strLen - 2);
+        let centNums = strAmount.substring(strLen - 2);
+        let structuredMoney = dollarNums + "." + centNums;
+        return Number(structuredMoney);
+    }
+
 }
 
 enum RecordType {
@@ -167,3 +209,31 @@ enum RecordType {
     fileControl         = "9"
 }
 
+/*
+enum AchDataTypes {
+    "string" = 1,
+    "integer" = 2,
+    "date" = 3,
+    "time" = 4,
+    "currency" = 5
+}
+*/
+
+/*
+
+// usage
+@achFileRecordField(11, 33, 2) 
+//decorator function
+function achFileRecordField(startPos:number, endPos: number, dataType: AchDataTypes) {
+    return function( target: any,
+        propertyKey: string,
+        descriptor: PropertyDescriptor)
+        {
+            //descriptor.value="this is value " + startPos + endPos + dataType;                
+            descriptor.get = function() { return "GET Function" + startPos + endPos + dataType + propertyKey; };
+    };
+}
+*/
+
+//attribute fieldname, start point, end point, datatype 
+//css framework bulma
