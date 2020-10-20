@@ -2,7 +2,9 @@ import { ENGINE_METHOD_DIGESTS } from 'constants';
 import { stringify } from 'querystring';
 import { start } from 'repl';
 import { EnvironmentVariableMutatorType } from 'vscode';
-import { ArrayUtil } from './arrayUtil';
+import { ArrayUtil } from './utils/arrayUtil';
+import { AchDataTypeUtil } from './utils/achDataTypesUtil';
+import  {RecordBlocksArray} from './achRecordBlocksArray';
 
 export class AchFileParser {
 
@@ -21,8 +23,8 @@ export class AchFileParser {
     // file control record fields
     public get batchCount() { return parseInt(this.getFileControlField(1, 7));  }
     public get entryAddendaCount() { return parseInt(this.getFileControlField(13, 21));  }
-    public get totalDebitAmountsInFile() { return this.getMoneyFromAchFormattedString(this.getFileControlField(31, 43));  }
-    public get totalCreditAmountsInFile() { return this.getMoneyFromAchFormattedString(this.getFileControlField(43, 55));  }
+    public get totalDebitAmountsInFile() { return AchDataTypeUtil.toMoney(this.getFileControlField(31, 43));  }
+    public get totalCreditAmountsInFile() { return AchDataTypeUtil.toMoney(this.getFileControlField(43, 55));  }
     
 
     public constructor(rawText:string)   {
@@ -50,9 +52,11 @@ export class AchFileParser {
 
     protected  _isFileContentValid:boolean = false;
     protected _errorInfo:string = "";    
-//    protected readonly _fileHeaderRecord:string = "";
-    //protected readonly _fileControlRecord:string ="";
+
     protected readonly _indLines: string[];
+    protected _recordBlocksArray: RecordBlocksArray[] = [];
+
+    //constants
     protected readonly eachLineExpectedLength:number = 94;
 
     protected validateTheRawText():boolean
@@ -178,7 +182,30 @@ export class AchFileParser {
 
     protected parseRawText() : void
     {
-        //this.achFileRawText.substr()
+        //loop through the lines and break the lines into blocks of records and add them to the RecordBlocksArray object
+        let startIndex = 0, endIndex = 0;
+        for (let i=0;i<this._indLines.length;++i) {
+
+            if (this._indLines[i][0] === RecordType.batchHeader)
+            {
+                startIndex = i;
+                endIndex = 0;
+                //go from here till end to find the batchcontrol record
+                for (let j=startIndex+1;j<this._indLines.length;++j) {
+                    if (this._indLines[j][0] === RecordType.batchControl) {
+                        endIndex = j;
+                        break;
+                    }                    
+                }
+
+                //found the pairing batchControl record if endIndex!=0
+                if (endIndex!==0) {
+                    let recordBlocksArrayObj = new RecordBlocksArray(this._indLines.slice(startIndex, endIndex + 1));
+                    this._recordBlocksArray.push(recordBlocksArrayObj);
+                    startIndex = endIndex + 1;  // move the startIndex to after the endIndex
+                }
+            }   
+        }
     }
 
     protected getFileHeaderField(startPos:number, endPos: number): string {
@@ -187,15 +214,6 @@ export class AchFileParser {
 
     protected getFileControlField(startPos:number, endPos: number): string {
         return this._indLines[this._indLines.length - 1].substring(startPos, endPos);
-    }
-
-    //achformattedstring is dollars followed by 2 cents. $$$$$$$$cc
-    protected getMoneyFromAchFormattedString(strAmount: string): number {
-        let strLen = strAmount.length;
-        let dollarNums = strAmount.substring(0, strLen - 2);
-        let centNums = strAmount.substring(strLen - 2);
-        let structuredMoney = dollarNums + "." + centNums;
-        return Number(structuredMoney);
     }
 
 }
