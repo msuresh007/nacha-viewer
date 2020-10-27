@@ -5,6 +5,7 @@ import { EnvironmentVariableMutatorType } from 'vscode';
 import { ArrayUtil } from './utils/arrayUtil';
 import { AchDataTypeUtil } from './utils/achDataTypesUtil';
 import  {RecordBlocksArray} from './achRecordBlocksArray';
+import * as achCEMs from './utils/achCEMs';
 
 export class AchFileParser {
 
@@ -95,14 +96,14 @@ export class AchFileParser {
                 return false;
             }
 
-            if ((ArrayUtil.isFirstElement(i, this._indLines.length)) && (firstChar!==RecordType.fileHeader)) {
+            if ((ArrayUtil.isFirstElement(i, this._indLines.length)) && (firstChar!== achCEMs.RecordType.fileHeader)) {
                 //first line is not a file header record
                 this._isFileContentValid=false;
                 this._errorInfo=`First line is not a file header record.`;
                 return false;
             }
 
-            if ((ArrayUtil.isLastElement(i, this._indLines.length)) && (firstChar!==RecordType.fileControl)) {
+            if ((ArrayUtil.isLastElement(i, this._indLines.length)) && (firstChar!==achCEMs.RecordType.fileControl)) {
                 //last line is not a file control record
                 this._isFileContentValid=false;
                 this._errorInfo=`Last line is not a file Control record.`;
@@ -110,7 +111,7 @@ export class AchFileParser {
             }
 
             if ((ArrayUtil.isOneOfTheMiddleElements(i, this._indLines.length)) 
-                    && ((firstChar===RecordType.fileHeader) || (firstChar===RecordType.fileControl))) {
+                    && ((firstChar===achCEMs.RecordType.fileHeader) || (firstChar===achCEMs.RecordType.fileControl))) {
                 //file header and/or file control file is repeated
                 this._isFileContentValid=false;
                 this._errorInfo=`File Header Record Type or File Control Record type is repeated in the file at line number ${i+1}`;
@@ -118,7 +119,7 @@ export class AchFileParser {
             }
 
             //checking rules for batch header
-            if (firstChar===RecordType.batchHeader) {
+            if (firstChar===achCEMs.RecordType.batchHeader) {
                 //make sure this is immediately after fileHeader of batchControl Record
                 if (ArrayUtil.isFirstElement(i, this._indLines.length)) {
                     //batch header cannot be first line
@@ -129,7 +130,7 @@ export class AchFileParser {
 
                 let prevChar = this._indLines[i-1][0];
 
-                if ((prevChar!==RecordType.fileHeader) && (prevChar!==RecordType.batchControl)) {
+                if ((prevChar!==achCEMs.RecordType.fileHeader) && (prevChar!==achCEMs.RecordType.batchControl)) {
                     this._isFileContentValid=false;
                     this._errorInfo=`The line ${i+1} is of type Record Header. And previous line ${i} is not file Header or Batch Control type`;
                     return false;
@@ -137,7 +138,7 @@ export class AchFileParser {
             }   // end of checking rules for batch header 
 
             //checking rules for batch control type
-            if (firstChar === RecordType.batchControl) {
+            if (firstChar === achCEMs.RecordType.batchControl) {
                 
                 let foundParingRecordHeader:boolean = false;
 
@@ -145,18 +146,18 @@ export class AchFileParser {
                 for (var j=i-1; j>0; --j) { //no need to go till fist element so, j>0
                     let prevChar = this._indLines[j][0];
 
-                    if (prevChar === RecordType.batchHeader) {  //found correct header
+                    if (prevChar === achCEMs.RecordType.batchHeader) {  //found correct header
                         foundParingRecordHeader = true;
                         break;
                     }
 
-                    if ((prevChar === RecordType.entryDetail) || (prevChar === RecordType.entryDetailAddenda)) {
+                    if ((prevChar === achCEMs.RecordType.entryDetail) || (prevChar === achCEMs.RecordType.entryDetailAddenda)) {
                         continue;
                     }
 
-                    if ((prevChar === RecordType.batchControl) ||
-                        (prevChar === RecordType.fileControl) ||
-                        (prevChar === RecordType.fileHeader)) {   // red flag 
+                    if ((prevChar === achCEMs.RecordType.batchControl) ||
+                        (prevChar === achCEMs.RecordType.fileControl) ||
+                        (prevChar === achCEMs.RecordType.fileHeader)) {   // red flag 
                             foundParingRecordHeader = false;
                             break;
                     }
@@ -186,13 +187,13 @@ export class AchFileParser {
         let startIndex = 0, endIndex = 0;
         for (let i=0;i<this._indLines.length;++i) {
 
-            if (this._indLines[i][0] === RecordType.batchHeader)
+            if (this._indLines[i][0] === achCEMs.RecordType.batchHeader)
             {
                 startIndex = i;
                 endIndex = 0;
                 //go from here till end to find the batchcontrol record
                 for (let j=startIndex+1;j<this._indLines.length;++j) {
-                    if (this._indLines[j][0] === RecordType.batchControl) {
+                    if (this._indLines[j][0] === achCEMs.RecordType.batchControl) {
                         endIndex = j;
                         break;
                     }                    
@@ -218,14 +219,6 @@ export class AchFileParser {
 
 }
 
-enum RecordType {
-    fileHeader          = "1",
-    batchHeader         = "5",
-    entryDetail         = "6",
-    entryDetailAddenda  = "7",
-    batchControl        = "8",
-    fileControl         = "9"
-}
 
 /*
 enum AchDataTypes {
