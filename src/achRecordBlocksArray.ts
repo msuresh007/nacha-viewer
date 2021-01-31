@@ -1,6 +1,7 @@
 import * as ach from './utils/achCEMs';
 
 import { AchDataTypeUtil } from './utils/achDataTypesUtil';
+import { EntryDetailRecord } from './achEntryDetailRecord';
 
 export class RecordBlocksArray {
 
@@ -50,6 +51,8 @@ export class RecordBlocksArray {
     /////////////////////// protected members
 
     protected readonly _indBlockLines: string[];
+    protected _entryDetailRecordsArray: EntryDetailRecord[] = [];
+    
 
     protected parseRawText() : void {
 
@@ -63,7 +66,8 @@ export class RecordBlocksArray {
             }
 
             if (this._indBlockLines[i][0] === ach.RecordType.entryDetail) {
-                //
+                let indEntryDetail = new EntryDetailRecord(this._indBlockLines[i]);
+                this._entryDetailRecordsArray.push(indEntryDetail);
             }
         }
 
