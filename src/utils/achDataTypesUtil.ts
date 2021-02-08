@@ -27,7 +27,7 @@ export class AchDataTypeUtil {
             return "Invalid Date Value - " + strDate;
         }
         
-        return new Date(yyNum, mmNum, ddNum);
+        return new Date(yyNum, mmNum, ddNum).toLocaleDateString();
     }
 
 }

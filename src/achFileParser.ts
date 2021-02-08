@@ -16,7 +16,7 @@ export class AchFileParser {
     // file header record fields
     public get immediateDestination() { return this.getFileHeaderField(3, 13);  }
     public get immediateOrigin() { return this.getFileHeaderField(13, 23);  }
-    public get fileCreationDate() { return this.getFileHeaderField(23, 29);  }
+    public get fileCreationDate() { return AchDataTypeUtil.toDate(this.getFileHeaderField(23, 29));  }
     public get fileCreationTime() { return this.getFileHeaderField(29, 33);  }
     public get immediateDestinationName() { return this.getFileHeaderField(40, 63);  }
     public get immediateOriginName() { return this.getFileHeaderField(63, 86);  }

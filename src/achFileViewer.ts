@@ -62,11 +62,16 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
         retHTML = `
         <HTML>
         <BODY>
+            <table border width=100%>
+            <tr> <td>
+            ${this.getTableFileHeaderControlDetails(achFileParserObj)}
+            </td> </tr>
+            </table>
              <h3> ACH File Contents: </h3>
              <HR/>
              <PRE>${achFileParserObj.achFileRawText}</PRE>
              <HR/>
-             Contents in file are valid : ${achFileParserObj.isFileValid} <br/>
+             Contents in file are valid: ${achFileParserObj.isFileValid} <br/>
              Error Info: ${achFileParserObj.errorInfo} <br/>
              <PRE> Immediate Destination: |${achFileParserObj.immediateDestination}|</PRE> </br/>
              <PRE> Immediate Origin: |${achFileParserObj.immediateOrigin}|</PRE> </br/>
@@ -80,6 +85,28 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
         </HTML>`;
 
         return retHTML;
+    }
+
+    private getTableFileHeaderControlDetails(achFileParser:AchFileParser): string
+    {
+        let retFileControlTable:string = "";
+        retFileControlTable = `<table width=100% border><tr>`;
+        retFileControlTable+=`<td>Immediate Destination</td><td><b>${achFileParser.immediateDestination}</b></td>`;
+        retFileControlTable+=`<td>Immediate Origin</td><td><b>${achFileParser.immediateOrigin}</b></td>`;
+        retFileControlTable+=`</tr><tr>`;
+        retFileControlTable+=`<td>Immediate Destination Name</td><td><b>${achFileParser.immediateDestinationName}</b></td>`;
+        retFileControlTable+=`<td>Immediate Origin Name</td><td><b>${achFileParser.immediateOriginName}</b></td>`;
+        retFileControlTable+=`</tr><tr>`;
+        retFileControlTable+=`<td>File Creation Date</td><td><b>${achFileParser.fileCreationDate}</b></td>`;
+        retFileControlTable+=`<td>File Creation Time</td><td><b>${achFileParser.fileCreationTime}</b></td>`;
+        retFileControlTable+=`</tr><tr>`;
+        retFileControlTable+=`<td>Total Number of Batch Blocks</td><td><b>${achFileParser.batchCount}</b></td>`;
+        retFileControlTable+=`<td>Total Number of Addenda Records Count</td><td><b>${achFileParser.entryAddendaCount}</b></td>`;
+        retFileControlTable+=`</tr><tr>`;
+        retFileControlTable+=`<td>Total Debit Entry Amount</td><td><b>${achFileParser.totalDebitAmountsInFile}</b></td>`;
+        retFileControlTable+=`<td>Total Credit Entry Amount</td><td><b>${achFileParser.totalCreditAmountsInFile}</b></td>`;
+        retFileControlTable+= `</tr><table>`;
+        return retFileControlTable;
     }
 
     
