@@ -62,15 +62,11 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
         retHTML = `
         <HTML>
         <BODY>
-            <H1> This is a test3 ${date} </H1>
-            <PRE>webview.cspSource BEGIN
-             ${webview.cspSource}
-             END </PRE>
              <h3> ACH File Contents: </h3>
              <HR/>
              <PRE>${achFileParserObj.achFileRawText}</PRE>
              <HR/>
-             Is File valid: ${achFileParserObj.isFileValid} <br/>
+             Contents in file are valid: ${achFileParserObj.isFileValid} <br/>
              Error Info: ${achFileParserObj.errorInfo} <br/>
              <PRE> Immediate Destination: |${achFileParserObj.immediateDestination}|</PRE> </br/>
              <PRE> Immediate Origin: |${achFileParserObj.immediateOrigin}|</PRE> </br/>
