@@ -17,7 +17,7 @@ export class AchFileParser {
     public get immediateDestination() { return this.getFileHeaderField(3, 13);  }
     public get immediateOrigin() { return this.getFileHeaderField(13, 23);  }
     public get fileCreationDate() { return AchDataTypeUtil.toDate(this.getFileHeaderField(23, 29));  }
-    public get fileCreationTime() { return this.getFileHeaderField(29, 33);  }
+    public get fileCreationTime() { return AchDataTypeUtil.toTime(this.getFileHeaderField(29, 33));  }
     public get immediateDestinationName() { return this.getFileHeaderField(40, 63);  }
     public get immediateOriginName() { return this.getFileHeaderField(63, 86);  }
 
@@ -46,6 +46,11 @@ export class AchFileParser {
 
     public get errorInfo():string {
         return this._errorInfo;
+    }
+
+    public get recordBlocks(): RecordBlocksArray[]
+    {
+        return this._recordBlocksArray;
     }
 
 

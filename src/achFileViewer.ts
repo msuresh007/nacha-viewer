@@ -62,10 +62,26 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
         retHTML = `
         <HTML>
         <BODY>
-            <table border width=100%>
+            <table border=1 width=100%>
             <tr> <td>
             ${this.getTableFileHeaderControlDetails(achFileParserObj)}
-            </td> </tr>
+            </td> </tr>`;
+
+            retHTML+= `<tr> <td>Total Number of Record Blocks: &nbsp;&nbsp; <b> ${achFileParserObj.recordBlocks.length} </b> </td> </tr>`;
+
+            retHTML+=`<tr>`;
+
+            achFileParserObj.recordBlocks.forEach(element => {
+                retHTML+= `<table border width=100%> 
+                <tr><td> <font size=+1> Batch Number  </font></td> <td> <font size=+1> ${element.headerBatchNumber} </font> </td> 
+                <td> Company Name </td> <td> <b> ${element.companyName} </b> </td> 
+                <td> Company Identification </td> <td> <b> ${element.headerCompanyIdentification} </b> </td>
+                </tr> </table>`;
+            });
+
+            retHTML+=`</tr>`;
+
+            retHTML+=`
             </table>
              <h3> ACH File Contents: </h3>
              <HR/>
@@ -103,8 +119,8 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
         retFileControlTable+=`<td>Total Number of Batch Blocks</td><td><b>${achFileParser.batchCount}</b></td>`;
         retFileControlTable+=`<td>Total Number of Addenda Records Count</td><td><b>${achFileParser.entryAddendaCount}</b></td>`;
         retFileControlTable+=`</tr><tr>`;
-        retFileControlTable+=`<td>Total Debit Entry Amount</td><td><b>${achFileParser.totalDebitAmountsInFile}</b></td>`;
-        retFileControlTable+=`<td>Total Credit Entry Amount</td><td><b>${achFileParser.totalCreditAmountsInFile}</b></td>`;
+        retFileControlTable+=`<td>Total Debit Entry Amount</td><td align=right><font size=+1><b>${achFileParser.totalDebitAmountsInFile}</b></font></td>`;
+        retFileControlTable+=`<td>Total Credit Entry Amount</td><td align=right><font size=+1><b>${achFileParser.totalCreditAmountsInFile}</b></font></td>`;
         retFileControlTable+= `</tr><table>`;
         return retFileControlTable;
     }

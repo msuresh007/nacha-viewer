@@ -13,7 +13,7 @@ export class AchDataTypeUtil {
             return "Invalid Money value - " + strAmount;
         }
 
-        return numMoney;
+        return '$ ' + numMoney.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         
     }
 
@@ -30,4 +30,20 @@ export class AchDataTypeUtil {
         return new Date(yyNum, mmNum, ddNum).toLocaleDateString();
     }
 
+    //ach formatted time wil be HHMM (24 hour format)
+    public static toTime(strTime: string): Date | string {
+
+        let hhNum = Number(strTime.substring(0, 2));
+        let mmNum = Number(strTime.substring(2, 4));
+        if (isNaN(hhNum) || isNaN(mmNum) ) {
+            return "Invalid Time Value - " + strTime;
+        }
+
+        let date: Date = new Date();  
+        date.setHours(hhNum);
+        date.setMinutes(mmNum);
+        date.setSeconds(0);
+        
+        return date.toLocaleTimeString();
+    }
 }
