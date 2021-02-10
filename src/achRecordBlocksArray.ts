@@ -29,9 +29,21 @@ export class RecordBlocksArray {
         return scc + ' - ' + retStr;
     }
 
+    public get standardEntryClassCode():string { 
+        let retStr: string = "";
+        let secCode = this.getRecordHeaderField(50, 53);  
+        if (ach.AchCEMs.serviceEntryClassDescriptions.has(secCode)) {
+            retStr = secCode + ' - ' + ach.AchCEMs.serviceEntryClassDescriptions.get(secCode);
+        }
+        else {
+            retStr = secCode + ' - Description NOT Available';
+        }
+
+        return retStr;
+    }
+
     public get companyName() { return this.getRecordHeaderField(4, 20);  }
     public get headerCompanyIdentification() { return this.getRecordHeaderField(40, 50);  }
-    public get standardEntryClassCode() { return this.getRecordHeaderField(50, 53);  }
     public get companyEntryDescrption() { return this.getRecordHeaderField(53, 63);  }
     public get companyDescriptiveDate() { return AchDataTypeUtil.toDate(this.getRecordHeaderField(63, 69));  }
     public get effectiveEntryDate() { return AchDataTypeUtil.toDate(this.getRecordHeaderField(69, 75));  }

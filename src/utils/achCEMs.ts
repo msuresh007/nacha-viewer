@@ -22,6 +22,29 @@ export  class AchCEMs {
         [38, 'Prenotification for a Savings debit'],
         [39, 'Zero dollar with remittance into Savings Account']
       ]); 
+
+      public static readonly serviceEntryClassDescriptions: Map<string, string> = new Map([
+        ["ACK", "Acknowledgment Entry"],
+        ["ARC", "Accounts Receivable Entry"],
+        ["BOC", "Back Office Conversion"],
+        ["CBR", "Cross Border Entry"],
+        ["CCD", "Cash Concentration and Disbursement"],
+        ["CID", "Customer Initiated Entry"],
+        ["CIE", "Customer Initiated Entry"],
+        ["COR", "Automated Notification of Change"],
+        ["CTX", "Corporate Trade Exchange"],
+        ["IAT", "International"],
+        ["MTE", "Machine Transfer Entry"],
+        ["PBR", "Cross Border Entry"],
+        ["POP", "Point-of-Purchase Entry"],
+        ["POS", "Point-of-Sale Entry"],
+        ["PPD", "Prearranged Payment and Deposit"],
+        ["RCK", "Re-presented Check Entry"],
+        ["TEL", "Telephone-Initiated Entry"],
+        ["TXP", "Tax Payments"],
+        ["WEB", "Internet-Initiated Entry"]
+      ]);
+
 }
 
 export enum RecordType {

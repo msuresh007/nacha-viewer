@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { AchFileParser } from './achFileParser';
-//import { getNonce } from './util';
+import { RecordBlocksArray } from './achRecordBlocksArray';
 
 export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider {
 
@@ -72,11 +72,7 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
             retHTML+=`<tr>`;
 
             achFileParserObj.recordBlocks.forEach(element => {
-                retHTML+= `<table border width=100%> 
-                <tr><td> <font size=+1> Batch Number  </font></td> <td> <font size=+1> ${element.headerBatchNumber} </font> </td> 
-                <td> Company Name </td> <td> <b> ${element.companyName} </b> </td> 
-                <td> Company Identification </td> <td> <b> ${element.headerCompanyIdentification} </b> </td>
-                </tr> </table>`;
+                retHTML+= this.getRecordBlockDetailsTable(element);
             });
 
             retHTML+=`</tr>`;
@@ -105,25 +101,63 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
 
     private getTableFileHeaderControlDetails(achFileParser:AchFileParser): string
     {
-        let retFileControlTable:string = "";
-        retFileControlTable = `<table width=100% border><tr>`;
-        retFileControlTable+=`<td>Immediate Destination</td><td><b>${achFileParser.immediateDestination}</b></td>`;
-        retFileControlTable+=`<td>Immediate Origin</td><td><b>${achFileParser.immediateOrigin}</b></td>`;
-        retFileControlTable+=`</tr><tr>`;
-        retFileControlTable+=`<td>Immediate Destination Name</td><td><b>${achFileParser.immediateDestinationName}</b></td>`;
-        retFileControlTable+=`<td>Immediate Origin Name</td><td><b>${achFileParser.immediateOriginName}</b></td>`;
-        retFileControlTable+=`</tr><tr>`;
-        retFileControlTable+=`<td>File Creation Date</td><td><b>${achFileParser.fileCreationDate}</b></td>`;
-        retFileControlTable+=`<td>File Creation Time</td><td><b>${achFileParser.fileCreationTime}</b></td>`;
-        retFileControlTable+=`</tr><tr>`;
-        retFileControlTable+=`<td>Total Number of Batch Blocks</td><td><b>${achFileParser.batchCount}</b></td>`;
-        retFileControlTable+=`<td>Total Number of Addenda Records Count</td><td><b>${achFileParser.entryAddendaCount}</b></td>`;
-        retFileControlTable+=`</tr><tr>`;
-        retFileControlTable+=`<td>Total Debit Entry Amount</td><td align=right><font size=+1><b>${achFileParser.totalDebitAmountsInFile}</b></font></td>`;
-        retFileControlTable+=`<td>Total Credit Entry Amount</td><td align=right><font size=+1><b>${achFileParser.totalCreditAmountsInFile}</b></font></td>`;
-        retFileControlTable+= `</tr><table>`;
+        let retFileControlTable:string = `
+        <table width=100% border>
+        <tr>
+            <td>Immediate Destination</td><td><b>${achFileParser.immediateDestination}</b></td>
+            <td>Immediate Origin</td><td><b>${achFileParser.immediateOrigin}</b></td>
+        </tr>
+        <tr>
+            <td>Immediate Destination Name</td><td><b>${achFileParser.immediateDestinationName}</b></td>
+            <td>Immediate Origin Name</td><td><b>${achFileParser.immediateOriginName}</b></td>
+        </tr>
+        <tr>
+            <td>File Creation Date</td><td><b>${achFileParser.fileCreationDate}</b></td>
+            <td>File Creation Time</td><td><b>${achFileParser.fileCreationTime}</b></td>
+        </tr>
+        <tr>
+            <td>Total Number of Batch Blocks</td><td align=right><b>${achFileParser.batchCount}</b></td>
+            <td>Total Number of Addenda Records Count</td><td align=right><b>${achFileParser.entryAddendaCount}</b></td>
+        </tr>
+        <tr>
+            <td>Total Debit Entry Amount</td><td align=right><font size=+1><b>${achFileParser.totalDebitAmountsInFile}</b></font></td>
+            <td>Total Credit Entry Amount</td><td align=right><font size=+1><b>${achFileParser.totalCreditAmountsInFile}</b></font></td>
+        </tr>
+        <table>`;
+
         return retFileControlTable;
     }
 
+    private getRecordBlockDetailsTable(recordBlock:RecordBlocksArray): string
+    {
+        
+        let retRecordBlockTable:string = `<table border width=100%> 
+        <tr>
+            <td rowspan=3> <font size=+1> Batch Number  </font></td> <td rowspan=3> <font size=+1> ${recordBlock.headerBatchNumber} </font> </td> 
+            <td>Total Debit Entry Amount</td><td align=right><font size=+1><b>${recordBlock.totalDebitEntry}</b></font></td>
+            <td>Total Credit Entry Amount</td><td align=right><font size=+1><b>${recordBlock.totalCreditEntry}</b></font></td>
+        </tr> 
+        <tr>
+            <td> Company Descriptive Date </td> <td> <b> ${recordBlock.companyDescriptiveDate} </b> </td> 
+            <td> Effective Entry Date </td> <td> <b> ${recordBlock.effectiveEntryDate} </b> </td> 
+        </tr>
+        <tr>
+            <td> Entry/Addenda Count </td> <td align=right> <b> ${recordBlock.entryAddendaCount} </b> </td> 
+            <td> Service Class Code </td> <td> <b> ${recordBlock.headerServiceClassCode} </b> </td> 
+        <tr>
+
+            <td> Company Name </td> <td> <b> ${recordBlock.companyName} </b> </td> 
+            <td> Company Identification </td> <td> <b> ${recordBlock.headerCompanyIdentification} </b> </td>
+            <td> Standard Entry Class </td> <td> <b> ${recordBlock.standardEntryClassCode} </b> </td> 
+        </tr> 
+        <tr>
+            <td> Company Entry Description </td> <td> <b> ${recordBlock.companyEntryDescrption} </b> </td> 
+            <td> Originator Status Code </td> <td> <b> ${recordBlock.originatorStatusCode} </b> </td> 
+            <td> Originating DFI Indentification </td> <td> <b> ${recordBlock.headerOriginatingDFIIdentification} </b> </td> 
+        </tr>
+        </table>`  ;      
+
+        return retRecordBlockTable;
+    }
     
     }   
