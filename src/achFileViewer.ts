@@ -55,19 +55,35 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
 
     private getHTMLForWebview(webview: vscode.Webview, document: vscode.TextDocument): string {
         let retHTML:string = "";
-        let date: Date = new Date();  
+        //let date: Date = new Date();  
         //const rawAchFileText:string = document.getText();
+        
         let achFileParserObj = new AchFileParser(document.getText());
+
+        let strFileValidityStatus:string = achFileParserObj.isFileValid ? "Good": "Invalid - " + achFileParserObj.errorInfo;
+        let fileValidityTdColor:string = achFileParserObj.isFileValid ? "green": "red";
+
         
         retHTML = `
         <HTML>
         <BODY>
             <table border=1 width=100%>
             <tr> <td>
+                <table border=1 width=100%>
+                <tr>
+                    <td> Full File Path </td> 
+                    <td> ${document.fileName} </td> 
+                    <td> File Validity Status </td>
+                    <td align=center style="background-color:${fileValidityTdColor};"> ${strFileValidityStatus} </td>
+
+                </tr>
+                </table>
+            </td> </tr>
+            <tr> <td>
             ${this.getTableFileHeaderControlDetails(achFileParserObj)}
             </td> </tr>`;
 
-            retHTML+= `<tr> <td>Total Number of Record Blocks: &nbsp;&nbsp; <b> ${achFileParserObj.recordBlocks.length} </b> </td> </tr>`;
+            retHTML+= `<tr> <td>Total Number of Record Blocks: &nbsp;&nbsp; <b>${achFileParserObj.recordBlocks.length}</b> </td> </tr>`;
 
             retHTML+=`<tr>`;
 
@@ -79,20 +95,15 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
 
             retHTML+=`
             </table>
-             <h3> ACH File Contents: </h3>
+             <h2> ACH File as-is: </h2>
+             <PRE style="color:aquamarine; padding-left: 50px;">
+                ${achFileParserObj.achFileRawText}
+            </PRE>
              <HR/>
-             <PRE>${achFileParserObj.achFileRawText}</PRE>
-             <HR/>
-             Contents in file are valid: ${achFileParserObj.isFileValid} <br/>
-             Error Info: ${achFileParserObj.errorInfo} <br/>
-             <PRE> Immediate Destination: |${achFileParserObj.immediateDestination}|</PRE> </br/>
-             <PRE> Immediate Origin: |${achFileParserObj.immediateOrigin}|</PRE> </br/>
-             <PRE> immediateDestinationName: |${achFileParserObj.immediateDestinationName}|</PRE> </br/>
-             <PRE> immediateOriginName: |${achFileParserObj.immediateOriginName}|</PRE> </br/>
-             <PRE> totalDebitAmountsInFile: |${achFileParserObj.totalDebitAmountsInFile}|</PRE> </br/>
-             <PRE> totalCreditAmountsInFile: |${achFileParserObj.totalCreditAmountsInFile}|</PRE> </br/>
-
-             end of the file
+             <div style="text-align:right; width: 100%;font-style: italic;">
+             ACH File Viewer 1.0 &nbsp;&nbsp;
+             </div>
+             <br />
         </BODY>
         </HTML>`;
 
@@ -131,9 +142,10 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
     private getRecordBlockDetailsTable(recordBlock:RecordBlocksArray): string
     {
         
-        let retRecordBlockTable:string = `<table border width=100%> 
+        let retRecordBlockTable:string = `<table border=1 width=100%> 
+        <tr> <td colspan=6  style="background-color:peru; height:3px; bdackground-image: linear-gradient(to right, peru, #000000);">   </td> </tr>
         <tr>
-            <td rowspan=3> <font size=+1> Batch Number  </font></td> <td rowspan=3> <font size=+1> ${recordBlock.headerBatchNumber} </font> </td> 
+            <td rowspan=3> <font size=+1> Batch Number  </font></td> <td rowspan=3 align=center> <font size=+2> ${recordBlock.headerBatchNumber} </font> </td> 
             <td>Total Debit Entry Amount</td><td align=right><font size=+1><b>${recordBlock.totalDebitEntry}</b></font></td>
             <td>Total Credit Entry Amount</td><td align=right><font size=+1><b>${recordBlock.totalCreditEntry}</b></font></td>
         </tr> 
@@ -155,9 +167,53 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
             <td> Originator Status Code </td> <td> <b> ${recordBlock.originatorStatusCode} </b> </td> 
             <td> Originating DFI Indentification </td> <td> <b> ${recordBlock.headerOriginatingDFIIdentification} </b> </td> 
         </tr>
+        <tr> <td colspan=6  style="background-color:saddlebrown; height:1px; bacskground-image: linear-gradient(to right, mediumturquoise, #000000);">   </td> </tr>
+        <tr>
+            <td colspan=6>
+                ${this.getDetailRecordsTable(recordBlock)}
+            </td>
+        </tr>
         </table>`  ;      
 
         return retRecordBlockTable;
+    }
+
+    private getDetailRecordsTable(recordBlock:RecordBlocksArray): string
+    {
+        let retDetailRecordTable:string = `
+            <table border=1 width=100%> 
+                <tr>
+                    <td><b>Trace Number</b></td>
+                    <td><b>Transaction Code</b></td>
+                    <td><b>Receiving DFI Identification</b></td>
+                    <td><b>Receiving Individual/Company Name</b></td>
+                    <td><b>DFI Account Number</b></td>
+                    <td><b>Identification Number</b></td>
+                    <td align=middle><b>Check Digit</b></td>
+                    <td align=right><b>Amount</b></td>
+                </tr>`;
+
+            recordBlock.entryDetailRecords.forEach(entryDetail => {
+                retDetailRecordTable+=`
+                <tr>
+                    <td>${entryDetail.traceNumber}</td>
+                    <td>${entryDetail.transactionCode}</td>
+                    <td>${entryDetail.receivingDFIIdentification}</td>
+                    <td>${entryDetail.individualName}</td>
+                    <td>${entryDetail.dfiAccountNumber}</td>
+                    <td>${entryDetail.identificationNumber}</td>
+                    <td align=middle>${entryDetail.checkDigit}</td>
+                    <td align=right>${entryDetail.amount}</td>
+                    </tr>
+                `;
+
+            });
+
+            retDetailRecordTable+=`</table>`;
+
+            //recordBlock.entryDetailRecords[0].
+
+        return retDetailRecordTable;
     }
     
     }   

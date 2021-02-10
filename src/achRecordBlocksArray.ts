@@ -60,6 +60,8 @@ export class RecordBlocksArray {
     public get totalCreditEntry() { return AchDataTypeUtil.toMoney(this.getRecordControlField(32, 44));  }
     //end of control fields
 
+    public get entryDetailRecords(): EntryDetailRecord[] { return this._entryDetailRecordsArray; };
+
     /////////////////////// protected members
 
     protected readonly _indBlockLines: string[];
