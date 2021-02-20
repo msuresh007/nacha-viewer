@@ -3,13 +3,17 @@
 	"displayName": "NACHA Viewer",
 	"description": "Displays NACHA file contents in human comprehensible structure",
 	"version": "0.0.1",
-	"publisher": "Suresh Madadha",
+	"publisher": "SureshMadadha",
 	"license": "MIT",
 	"author": {
 		"name": "Suresh Madadha",
 		"email": "msuresh007@hotmail.com",
 		"url": "https://www.linkedin.com/in/suresh-madadha-6763821b9/"
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://msuresh007@dev.azure.com/msuresh007/nacha-viewer/_git/nacha-viewer"
+	  },	
 	"engines": {
 		"vscode": "^1.49.0"
 	},

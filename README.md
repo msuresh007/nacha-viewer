@@ -8,7 +8,7 @@ This is Visual Studio Code extention for viewing ACH files (NACHA files) in  hum
 - Simple file level validations of file structure
 - Comprehensive view of dollar amounts and related information
 
-![Screenshot](images/achviewerscreenshot.png)
+![Screenshot](https://dev.azure.com/msuresh007/_git/nacha-viewer?path=%2Fimages%2Fachviewerscreenshot.png)
 
 ## Requirements
 
