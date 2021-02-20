@@ -3,22 +3,29 @@
 	"displayName": "NACHA Viewer",
 	"description": "Displays NACHA file contents in human comprehensible structure",
 	"version": "0.0.1",
+	"publisher": "Suresh Madadha",
+	"license": "MIT",
+	"author": {
+		"name": "Suresh Madadha",
+		"email": "msuresh007@hotmail.com",
+		"url": "https://www.linkedin.com/in/suresh-madadha-6763821b9/"
+	},
 	"engines": {
 		"vscode": "^1.49.0"
 	},
 	"categories": [
-		"Other"
+		"Formatters", "Visualization"
 	],
+	"keywords": ["nacha", "ach"],
 	"activationEvents": [
-		"onCommand:nacha-viewer.helloWorld",
 		"onCustomEditor:nacha-viewer.achFile"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "nacha-viewer.helloWorld",
-				"title": "Hello World"
+				"command": "nacha-viewer.nachaViewer",
+				"title": "Nacha Viewer"
 			}
 		],
 		"customEditors": [

@@ -1,65 +1,36 @@
 # nacha-viewer README
 
-This is the README for your extension "nacha-viewer". After writing up a brief description, we recommend including the following sections.
+This is Visual Studio Code extention for viewing ACH files (NACHA files) in  human-comprehendable arrangement.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- Simple to use and visualize the information inside ACH file.
+- Simple file level validations of file structure
+- Comprehensive view of dollar amounts and related information
 
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+![Screenshot](images/achviewerscreenshot.png)
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
+Visual Studio Code - latest version
 
 ## Release Notes
-
-Users appreciate release notes as you update your extension.
-
+This is the first cut of ACH file viewer. Please send your suggestions/enhancement requests to msuresh007@hotmail.com 
 ### 1.0.0
 
-Initial release of ...
+ - Initial release of ACH File Viewer. 
+ - Support for viewing batch records, amounts and associated details
 
-### 1.0.1
+### Future versions
+- Inclusion of Addenda rows
+- Validation of Dollar amounts 
 
-Fixed issue #.
 
-### 1.1.0
+## License
 
-Added features X, Y, and Z.
+MIT
 
------------------------------------------------------------------------------------------------------------
+## Author 
 
-## Working with Markdown
+Suresh Madadha - msuresh007@hotmail.com 
 
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**

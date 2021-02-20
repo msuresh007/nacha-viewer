@@ -28,10 +28,10 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
                         webviewPanel.webview.html=this.getHTMLForWebview(webviewPanel.webview, document);
   
                         function updateWebview() {
-                            // webviewPanel.webview.postMessage({
-                            //     type: 'update',
-                            //     text: document.getText(),
-                            // });
+                            webviewPanel.webview.postMessage({
+                                type: 'update',
+                                text: document.getText(),
+                            });
                         }
 
                             const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument(e => {
@@ -60,8 +60,6 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
         
         let achFileParserObj = new AchFileParser(document.getText());
 
-        let strFileValidityStatus:string = achFileParserObj.isFileValid ? "Good": "Invalid - " + achFileParserObj.errorInfo;
-        let fileValidityTdColor:string = achFileParserObj.isFileValid ? "green": "red";
 
         
         retHTML = `
@@ -69,21 +67,10 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
         <BODY>
             <table border=1 width=100%>
             <tr> <td>
-                <table border=1 width=100%>
-                <tr>
-                    <td> Full File Path </td> 
-                    <td> ${document.fileName} </td> 
-                    <td> File Validity Status </td>
-                    <td align=center style="background-color:${fileValidityTdColor};"> ${strFileValidityStatus} </td>
-
-                </tr>
-                </table>
-            </td> </tr>
-            <tr> <td>
             ${this.getTableFileHeaderControlDetails(achFileParserObj)}
             </td> </tr>`;
 
-            retHTML+= `<tr> <td>Total Number of Record Blocks: &nbsp;&nbsp; <b>${achFileParserObj.recordBlocks.length}</b> </td> </tr>`;
+//            retHTML+= `<tr> <td>Total Number of Record Blocks: &nbsp;&nbsp; <b>${achFileParserObj.recordBlocks.length}</b> </td> </tr>`;
 
             retHTML+=`<tr>`;
 
@@ -95,13 +82,13 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
 
             retHTML+=`
             </table>
+            <br /> <br />
+            <font size=+1> File Path: &nbsp;&nbsp; ${document.fileName} </font>
              <h2> ACH File as-is: </h2>
-             <PRE style="color:aquamarine; padding-left: 50px;">
-                ${achFileParserObj.achFileRawText}
-            </PRE>
+             <PRE style="color:aquamarine; padding-left: 50px;">${achFileParserObj.achFileRawText}</PRE>
              <HR/>
              <div style="text-align:right; width: 100%;font-style: italic;">
-             ACH File Viewer 1.0 &nbsp;&nbsp;
+             ACH File Viewer 1.0.0 &nbsp;&nbsp;
              </div>
              <br />
         </BODY>
@@ -112,8 +99,15 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
 
     private getTableFileHeaderControlDetails(achFileParser:AchFileParser): string
     {
+        let strFileValidityStatus:string = achFileParser.isFileValid ? "Good": "Invalid - " + achFileParser.errorInfo;
+        let fileValidityTdColor:string = achFileParser.isFileValid ? "green": "red";
+
         let retFileControlTable:string = `
         <table width=100% border>
+        <tr>
+            <td> File ID Modifier </td><td> <b>${achFileParser.fileIDModifier}</b> </td> 
+            <td> File Validity Status </td><td align=center style="background-color:${fileValidityTdColor};"> ${strFileValidityStatus} </td>
+        </tr>
         <tr>
             <td>Immediate Destination</td><td><b>${achFileParser.immediateDestination}</b></td>
             <td>Immediate Origin</td><td><b>${achFileParser.immediateOrigin}</b></td>
@@ -128,7 +122,7 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
         </tr>
         <tr>
             <td>Total Number of Batch Blocks</td><td align=right><b>${achFileParser.batchCount}</b></td>
-            <td>Total Number of Addenda Records Count</td><td align=right><b>${achFileParser.entryAddendaCount}</b></td>
+            <td>Total Number of Entry &amp; Addenda Records</td><td align=right><b>${achFileParser.entryAddendaCount}</b></td>
         </tr>
         <tr>
             <td>Total Debit Entry Amount</td><td align=right><font size=+1><b>${achFileParser.totalDebitAmountsInFile}</b></font></td>
@@ -142,8 +136,8 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
     private getRecordBlockDetailsTable(recordBlock:RecordBlocksArray): string
     {
         
-        let retRecordBlockTable:string = `<table border=1 width=100%> 
-        <tr> <td colspan=6  style="background-color:peru; height:3px; bdackground-image: linear-gradient(to right, peru, #000000);">   </td> </tr>
+        //<tr> <td colspan=6  style="background-color:peru; height:3px; bdackground-image: linear-gradient(to right, peru, #000000);">   </td> </tr>
+        let retRecordBlockTable:string = `<table border=1 width=100% > 
         <tr>
             <td rowspan=3> <font size=+1> Batch Number  </font></td> <td rowspan=3 align=center> <font size=+2> ${recordBlock.headerBatchNumber} </font> </td> 
             <td>Total Debit Entry Amount</td><td align=right><font size=+1><b>${recordBlock.totalDebitEntry}</b></font></td>
@@ -154,7 +148,7 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
             <td> Effective Entry Date </td> <td> <b> ${recordBlock.effectiveEntryDate} </b> </td> 
         </tr>
         <tr>
-            <td> Entry/Addenda Count </td> <td align=right> <b> ${recordBlock.entryAddendaCount} </b> </td> 
+            <td> Entry 	&amp; Addenda Records Count </td> <td align=right> <b> ${recordBlock.entryAddendaCount} </b> </td> 
             <td> Service Class Code </td> <td> <b> ${recordBlock.headerServiceClassCode} </b> </td> 
         <tr>
 
@@ -167,13 +161,14 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
             <td> Originator Status Code </td> <td> <b> ${recordBlock.originatorStatusCode} </b> </td> 
             <td> Originating DFI Indentification </td> <td> <b> ${recordBlock.headerOriginatingDFIIdentification} </b> </td> 
         </tr>
-        <tr> <td colspan=6  style="background-color:saddlebrown; height:1px; bacskground-image: linear-gradient(to right, mediumturquoise, #000000);">   </td> </tr>
+
         <tr>
             <td colspan=6>
                 ${this.getDetailRecordsTable(recordBlock)}
             </td>
         </tr>
         </table>`  ;      
+//        <tr> <td colspan=6  style="background-color:saddlebrown; height:1px; bacskground-image: linear-gradient(to right, mediumturquoise, #000000);">   </td> </tr>
 
         return retRecordBlockTable;
     }
@@ -182,7 +177,7 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
     {
         let retDetailRecordTable:string = `
             <table border=1 width=100%> 
-                <tr>
+                <tr style="background-color:#333333;">
                     <td><b>Trace Number</b></td>
                     <td><b>Transaction Code</b></td>
                     <td><b>Receiving DFI Identification</b></td>

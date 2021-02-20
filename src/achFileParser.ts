@@ -18,6 +18,7 @@ export class AchFileParser {
     public get immediateOrigin() { return this.getFileHeaderField(13, 23);  }
     public get fileCreationDate() { return AchDataTypeUtil.toDate(this.getFileHeaderField(23, 29));  }
     public get fileCreationTime() { return AchDataTypeUtil.toTime(this.getFileHeaderField(29, 33));  }
+    public get fileIDModifier() { return this.getFileHeaderField(33, 34);  }
     public get immediateDestinationName() { return this.getFileHeaderField(40, 63);  }
     public get immediateOriginName() { return this.getFileHeaderField(63, 86);  }
 
@@ -72,7 +73,8 @@ export class AchFileParser {
             var eachString = this._indLines[itemKey];
             if (eachString.length !== this.eachLineExpectedLength) {
                 this._isFileContentValid=false;
-                this._errorInfo=`Invalid line length at number ${itemKey}. Expected length is ${this.eachLineExpectedLength}. This line is of length -> ${eachString.length}`;
+                let numIndex = Number(itemKey) + 1;
+                this._errorInfo=`Invalid line length at number ${numIndex}. Expected length is ${this.eachLineExpectedLength}. This line is of length -> ${eachString.length}`;
                 return false;
             }
         }

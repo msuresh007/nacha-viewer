@@ -22,12 +22,14 @@ export class AchDataTypeUtil {
 
         let yyNum = Number(strDate.substring(0, 2));
         let mmNum = Number(strDate.substring(2, 4));
-        let ddNum = Number(strDate.substring(5));
+        let ddNum = Number(strDate.substring(4));
         if (isNaN(yyNum) || isNaN(mmNum) || isNaN(ddNum)) {
             return "Invalid Date Value - " + strDate;
         }
         
-        return new Date(yyNum, mmNum, ddNum).toLocaleDateString();
+        //let prefixedWith20 = 2000 + yyNum;
+        //return new Date(prefixedWith20, mmNum, ddNum).toLocaleDateString();
+        return `${mmNum}/${ddNum}/${yyNum}`;
     }
 
     //ach formatted time wil be HHMM (24 hour format)
