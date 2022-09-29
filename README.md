@@ -15,7 +15,12 @@ This is Visual Studio Code extention for viewing ACH files (NACHA files) in  hum
 Visual Studio Code - latest version
 
 ## Release Notes
-This is the first cut of ACH file viewer. Please send your suggestions/enhancement requests to msuresh007@hotmail.com 
+Please send your suggestions/enhancement requests to msuresh007@hotmail.com 
+### 1.0.1
+
+ - Updated to support carriage return character, in addition to new line character
+ 
+
 ### 1.0.0
 
  - Initial release of ACH File Viewer. 
@@ -32,5 +37,7 @@ MIT
 
 ## Author 
 
-Suresh Madadha - msuresh007@hotmail.com 
+Suresh Madadha 
+- Email: msuresh007@hotmail.com 
+- LinkedIn: https://www.linkedin.com/in/suresh-madadha/ 
 

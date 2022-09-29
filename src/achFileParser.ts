@@ -30,7 +30,8 @@ export class AchFileParser {
     
 
     public constructor(rawText:string)   {
-        this.achFileRawText = rawText;
+        this.achFileRawText = rawText;        
+        this.achFileRawText = this.achFileRawText .replace("\r\n", "\n"); // allowing the user to type \r\n also 
         this._indLines = this.achFileRawText.split('\n');
         
         if (this.validateTheRawText()) {
