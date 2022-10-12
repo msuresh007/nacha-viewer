@@ -16,7 +16,7 @@ Visual Studio Code - latest version
 
 ## Release Notes
 Please send your suggestions/enhancement requests to msuresh007@hotmail.com 
-### 1.0.1
+### 1.1.0
 
  - Updated to support carriage return character, in addition to new line character
  

@@ -2,7 +2,7 @@
 	"name": "nacha-viewer",
 	"displayName": "NACHA Viewer",
 	"description": "Displays NACHA file contents in human readable structure",
-	"version": "1.0.1",
+	"version": "1.1.0",
 	"publisher": "SureshMadadha",
 	"license": "MIT",
 	"author": {
