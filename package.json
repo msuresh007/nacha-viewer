@@ -13,14 +13,18 @@
 	"repository": {
 		"type": "git",
 		"url": "https://msuresh007@dev.azure.com/msuresh007/nacha-viewer/_git/nacha-viewer"
-	  },	
+	},
 	"engines": {
 		"vscode": "^1.49.0"
 	},
 	"categories": [
-		"Formatters", "Visualization"
+		"Formatters",
+		"Visualization"
 	],
-	"keywords": ["nacha", "ach"],
+	"keywords": [
+		"nacha",
+		"ach"
+	],
 	"activationEvents": [
 		"onCustomEditor:nacha-viewer.achFile"
 	],
