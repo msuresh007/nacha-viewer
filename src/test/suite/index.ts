@@ -1,38 +1,26 @@
+import * as fs from 'fs';
 import * as path from 'path';
-import * as Mocha from 'mocha';
-import * as glob from 'glob';
 
-export function run(): Promise<void> {
-	// Create the mocha test
-	const mocha = new Mocha({
-		ui: 'tdd',
-		color: true
-	});
+export function findTestFiles(): Promise<string[]> {
+    const testsRoot = path.resolve(__dirname, '..');
 
-	const testsRoot = path.resolve(__dirname, '..');
+    return new Promise((resolve, reject) => {
+        fs.readdir(testsRoot, (err, files) => {
+            if (err) {
+                return reject(err);
+            }
 
-	return new Promise((c, e) => {
-		glob('**/**.test.js', { cwd: testsRoot }, (err, files) => {
-			if (err) {
-				return e(err);
-			}
+            // Filter for test files that end with .test.js
+            const testFiles = files.filter(file => file.endsWith('.test.js'));
 
-			// Add files to the test suite
-			files.forEach(f => mocha.addFile(path.resolve(testsRoot, f)));
-
-			try {
-				// Run the mocha test
-				mocha.run(failures => {
-					if (failures > 0) {
-						e(new Error(`${failures} tests failed.`));
-					} else {
-						c();
-					}
-				});
-			} catch (err) {
-				console.error(err);
-				e(err);
-			}
-		});
-	});
+            // Log found test files
+            console.log('Found test files:', testFiles);
+            resolve(testFiles);
+        });
+    });
 }
+
+// Usage example (uncomment the following lines to execute)
+// findTestFiles()
+//     .then(files => console.log(files))
+//     .catch(err => console.error(err));

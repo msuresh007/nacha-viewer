@@ -25,14 +25,17 @@ export  class AchCEMs {
 
       public static readonly serviceEntryClassDescriptions: Map<string, string> = new Map([
         ["ACK", "Acknowledgment Entry"],
+        ["ADV", "Automated Accounting Advice"],
         ["ARC", "Accounts Receivable Entry"],
+        ["ATX", "Financial EDI Acknowledgment"],
         ["BOC", "Back Office Conversion"],
         ["CBR", "Cross Border Entry"],
         ["CCD", "Cash Concentration and Disbursement"],
-        ["CID", "Customer Initiated Entry"],
         ["CIE", "Customer Initiated Entry"],
         ["COR", "Automated Notification of Change"],
         ["CTX", "Corporate Trade Exchange"],
+        ["DNE", "Death Notification Entry"],
+        ["ENR", "Automated Enrollment Entry"],
         ["IAT", "International"],
         ["MTE", "Machine Transfer Entry"],
         ["PBR", "Cross Border Entry"],
@@ -40,10 +43,13 @@ export  class AchCEMs {
         ["POS", "Point-of-Sale Entry"],
         ["PPD", "Prearranged Payment and Deposit"],
         ["RCK", "Re-presented Check Entry"],
+        ["SHR", "Shared Network Transaction"],
         ["TEL", "Telephone-Initiated Entry"],
-        ["TXP", "Tax Payments"],
-        ["WEB", "Internet-Initiated Entry"]
-      ]);
+        ["TRC", "Truncated Check Entry"],
+        ["TRX", "Truncated Entries Exchange"],
+        ["WEB", "Internet-Initiated Entry"],
+        ["XCK", "Destroyed Check Entry"]
+    ]);
 
 }
 

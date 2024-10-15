@@ -1,12 +1,15 @@
 # nacha-viewer README
 
-This is Visual Studio Code extention for viewing ACH files (NACHA files) in  human-comprehendable arrangement.
+Transform ACH (NACHA) files into clear, readable tables — ACH data decoded with ease
 
-## Features
+## Key Features of Nacha ACH File Viewer
 
-- Simple to use and visualize the information inside ACH file.
-- Simple file level validations of file structure
-- Comprehensive view of dollar amounts and related information
+- **Effortless ACH File Parsing**: Instantly convert complex ACH files into easy-to-read, structured tables.
+- **Built-in File Structure Validation**: Automatically check the integrity and format of your ACH files to ensure compliance with Nacha standards.
+- **Comprehensive Financial Overview**: Get a detailed, clear snapshot of all dollar amounts and key transactional data.
+- **Quick Error Detection**: Spot discrepancies in file structure and amounts at a glance.
+- **User-Friendly Interface**: Designed for both technical and non-technical users, simplifying the review process for everyone.
+- **Streamlined Data Analysis**: Easily navigate through large datasets to find critical information without hassle.
 
 ![Screenshot](https://i.imgur.com/V6U8cM9.png)
 
@@ -15,7 +18,9 @@ This is Visual Studio Code extention for viewing ACH files (NACHA files) in  hum
 Visual Studio Code - latest version
 
 ## Release Notes
-Please send your suggestions/enhancement requests to msuresh007@hotmail.com 
+Please send your suggestions/enhancement requests to msuresh007@gmail.com 
+### 1.2.0
+- Added SEC code descriptions related to international transactions, acknowledgments, and specialized payment types to enhance coverage and support for various ACH entry classifications.
 ### 1.1.0
 
  - Updated to support carriage return character, in addition to new line character
@@ -38,6 +43,6 @@ MIT
 ## Author 
 
 Suresh Madadha 
-- Email: msuresh007@hotmail.com 
+- Email: msuresh007@gmail.com 
 - LinkedIn: https://www.linkedin.com/in/suresh-madadha/ 
 

@@ -88,7 +88,7 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
              <PRE style="color:aquamarine; padding-left: 50px;">${achFileParserObj.achFileRawText}</PRE>
              <HR/>
              <div style="text-align:right; width: 100%;font-style: italic;">
-             ACH File Viewer 1.1.0 &nbsp;&nbsp;
+             ACH File Viewer 1.2.0 &nbsp;&nbsp;
              </div>
              <br />
         </BODY>
