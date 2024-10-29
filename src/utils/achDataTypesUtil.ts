@@ -2,7 +2,7 @@
 export class AchDataTypeUtil {
 
     //achformattedstring is dollars followed by 2 cents. $$$$$$$$cc
-    public static toMoney(strAmount: string): number | string {
+    public static toMoney(strAmount: string, includeDollarSymbol: boolean = true): number | string {
         let strLen = strAmount.length;
         let dollarNums = strAmount.substring(0, strLen - 2);
         let centNums = strAmount.substring(strLen - 2);
@@ -13,7 +13,13 @@ export class AchDataTypeUtil {
             return "Invalid Money value - " + strAmount;
         }
 
-        return '$ ' + numMoney.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        let dollarSymbol = ''
+        if (includeDollarSymbol == true) {
+            //dollarSymbol = '$ ';
+            dollarSymbol = ''; // for now always removing the $ symbol till we get clear differentiation between dollar based amounts and non-dollar based ones
+        }
+
+        return dollarSymbol + numMoney.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         
     }
 

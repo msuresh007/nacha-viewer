@@ -132,10 +132,8 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
 
         return retFileControlTable;
     }
-
-    private getRecordBlockDetailsTable(recordBlock:RecordBlocksArray): string
+    private getRecordBlockDetailsTableForACH(recordBlock:RecordBlocksArray): string
     {
-        
         //<tr> <td colspan=6  style="background-color:peru; height:3px; bdackground-image: linear-gradient(to right, peru, #000000);">   </td> </tr>
         let retRecordBlockTable:string = `<table border=1 width=100% > 
         <tr>
@@ -171,6 +169,68 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
 //        <tr> <td colspan=6  style="background-color:saddlebrown; height:1px; bacskground-image: linear-gradient(to right, mediumturquoise, #000000);">   </td> </tr>
 
         return retRecordBlockTable;
+
+    }
+
+    private getRecordBlockDetailsTableForIAT(recordBlock:RecordBlocksArray): string
+    {
+        //<tr> <td colspan=6  style="background-color:peru; height:3px; bdackground-image: linear-gradient(to right, peru, #000000);">   </td> </tr>
+        let retRecordBlockTable:string = `<table border=1 width=100% > 
+        <tr>
+            <td rowspan=3> <font size=+1> Batch Number  </font></td> <td rowspan=3 align=center> <font size=+2> ${recordBlock.headerBatchNumber} </font> </td> 
+            <td>Total Debit Entry Amount</td><td align=right><font size=+1><b>${recordBlock.totalDebitEntryForIAT}</b></font></td>
+            <td>Total Credit Entry Amount</td><td align=right><font size=+1><b>${recordBlock.totalCreditEntryForIAT}</b></font></td>
+        </tr> 
+        <tr>
+            <td> Company Descriptive Date </td> <td> <b> ${recordBlock.companyDescriptiveDate} </b> </td> 
+            <td> Effective Entry Date </td> <td> <b> ${recordBlock.effectiveEntryDate} </b> </td> 
+        </tr>
+        <tr>
+            <td> Entry 	&amp; Addenda Records Count </td> <td align=right> <b> ${recordBlock.entryAddendaCount} </b> </td> 
+            <td> Service Class Code </td> <td> <b> ${recordBlock.headerServiceClassCode} </b> </td> 
+        <tr>
+
+            <td> IAT Indicator </td> <td> <b> ${recordBlock.companyName} </b> </td> 
+            <td> Originator Identification </td> <td> <b> ${recordBlock.headerCompanyIdentification} </b> </td>
+            <td> Standard Entry Class </td> <td> <b> ${recordBlock.standardEntryClassCode} </b> </td> 
+        </tr> 
+        <tr>
+            <td> Company Entry Description </td> <td> <b> ${recordBlock.companyEntryDescrption} </b> </td> 
+            <td> Originator Status Code </td> <td> <b> ${recordBlock.originatorStatusCode} </b> </td> 
+            <td> Gateway Operator/ODFI Indentification </td> <td> <b> ${recordBlock.headerOriginatingDFIIdentification} </b> </td> 
+        </tr>
+        <tr>
+            <td> Foreign Exchange Indicator </td> <td> <b> ${recordBlock.foreignExchangeIndicator} </b> </td>
+            <td> Foreign Exchange Reference Indicator </td> <td> <b> ${recordBlock.foreignExchangeReferenceIndicator} </b> </td>
+            <td> Foreign Exchange Reference </td> <td> <b> ${recordBlock.foreignExchangeReference} </b> </td>
+        </tr>
+        <tr>
+            <td> Originating Currency Code </td> <td> <b> ${recordBlock.originatingCurrencyCode} </b> </td>
+            <td>  Destination Currency Code </td> <td> <b> ${recordBlock.DestinationCurrencyCode} </b> </td>
+            <td> Destination Country Code </td> <td> <b> ${recordBlock.iSODestinationCountryCode} </b> </td>
+        </tr>
+
+        <tr>
+            <td colspan=6>
+                ${this.getDetailRecordsTable(recordBlock)}
+            </td>
+        </tr>
+        </table>`  ;      
+    //        <tr> <td colspan=6  style="background-color:saddlebrown; height:1px; bacskground-image: linear-gradient(to right, mediumturquoise, #000000);">   </td> </tr>
+
+        return retRecordBlockTable;
+}
+
+    private getRecordBlockDetailsTable(recordBlock:RecordBlocksArray): string
+    {
+        
+        if (recordBlock.isIAT()) {
+            return this.getRecordBlockDetailsTableForIAT(recordBlock);
+        }
+        else {
+            return this.getRecordBlockDetailsTableForACH(recordBlock);
+        }
+
     }
 
     private getDetailRecordsTable(recordBlock:RecordBlocksArray): string
@@ -199,7 +259,8 @@ export class NachaFileViewerProvider implements vscode.CustomTextEditorProvider 
                     <td>${entryDetail.identificationNumber}</td>
                     <td align=middle>${entryDetail.checkDigit}</td>
                     <td align=right>${entryDetail.amount}</td>
-                    </tr>
+                </tr>
+                ${entryDetail.AddendaRecordsHtmlTable}    
                 `;
 
             });
