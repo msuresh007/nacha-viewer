@@ -1,13 +1,13 @@
 {
 	"name": "nacha-viewer",
 	"displayName": "NACHA Viewer",
-	"description": "Transform ACH (NACHA) files into clear, readable tables — ACH data decoded with ease",
-	"version": "1.2.0",
+	"description": "Effortlessly decode ACH and IAT (NACHA) files into clear, readable tables",
+	"version": "2.0.0",
 	"publisher": "SureshMadadha",
 	"license": "MIT",
 	"author": {
 		"name": "Suresh Madadha",
-		"email": "msuresh007@hotmail.com",
+		"email": "msuresh007@gmail.com",
 		"url": "https://www.linkedin.com/in/suresh-madadha/"
 	},
 	"repository": {
@@ -23,7 +23,8 @@
 	],
 	"keywords": [
 		"nacha",
-		"ach"
+		"ach",
+		"iat"
 	],
 	"activationEvents": [
 		"onCustomEditor:nacha-viewer.achFile"
