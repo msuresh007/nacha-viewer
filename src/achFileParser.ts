@@ -92,8 +92,9 @@ export class AchFileParser {
                     7 - Entry Detail Addendum (optional)
                 8 - Batch Control
             9 - File Control 
-        */
 
+            9999999s (all 94 characters) - Padding lines (optional)
+        */        
         
         for (var i=0;i<this._indLines.length; ++i) {
         
@@ -103,6 +104,11 @@ export class AchFileParser {
                 this._isFileContentValid=false;
                 this._errorInfo=`Invalid first character in line number ${i+1}`;
                 return false;
+            } 
+            
+            if (this.checkIfPaddedLine(i)) {
+                //this is a padded line, so skip the validation for this line
+                continue;
             }
 
             if ((ArrayUtil.isFirstElement(i, this._indLines.length)) && (firstChar!== achCEMs.RecordType.fileHeader)) {
@@ -121,11 +127,34 @@ export class AchFileParser {
 
             if ((ArrayUtil.isOneOfTheMiddleElements(i, this._indLines.length)) 
                     && ((firstChar===achCEMs.RecordType.fileHeader) || (firstChar===achCEMs.RecordType.fileControl))) {
-                //file header and/or file control file is repeated
-                this._isFileContentValid=false;
-                this._errorInfo=`File Header Record Type or File Control Record type is repeated in the file at line number ${i+1}`;
-                return false;
+                
+                        //checking for file Header
+                        if (firstChar === achCEMs.RecordType.fileHeader) {
+                            //check all lines from 0 to i-1 if they are padded lines
+                            for (let j=0;j<i;++j) {
+                                if (!this.checkIfPaddedLine(j)) {
+                                    this._isFileContentValid=false;
+                                    this._errorInfo=`File Header Record Type is repeated in the file at line number ${i+1}`;
+                                    return false;
+                                }
+                            }
+                            //if we came out of this loop then the file header is indeed first line and all lines above are padded
+                        }
+
+                        //checking for file Control
+                        if (firstChar === achCEMs.RecordType.fileControl) {
+                            //check all lines from i+1 to end if they are padded lines
+                            for (let j=i+1;j<this._indLines.length;++j) {
+                                if (!this.checkIfPaddedLine(j)) {
+                                    this._isFileContentValid=false;
+                                    this._errorInfo=`File Control Record Type is repeated in the file at line number ${i+1}`;
+                                    return false;
+                                }
+                            }
+                            //if we came out of this loop then the file control is indeed last line and all lines above are padded
+                        }
             }
+            
 
             //checking rules for batch header
             if (firstChar===achCEMs.RecordType.batchHeader) {
@@ -225,6 +254,16 @@ export class AchFileParser {
     protected getFileControlField(startPos:number, endPos: number): string {
         return this._indLines[this._indLines.length - 1].substring(startPos, endPos);
     }
+
+    protected checkIfPaddedLine(lineNumber:number):boolean {
+        var line = this._indLines[lineNumber];
+        for (let i=0;i<line.length;++i) {
+            if (line[i] !== "9") {
+                return false;
+            }
+        }
+        return true;
+    }   
 
 }
 

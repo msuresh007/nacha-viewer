@@ -20,8 +20,12 @@ Visual Studio Code - latest version
 ## Release Notes
 Please send your suggestions/enhancement requests to msuresh007@gmail.com 
 
+### 3.0.1
+- **Padded Lines Support**: The NachaViewer extension now supports handling padded lines, which are used to ensure ACH files conform to fixed-length record formats by padding lines to meet the required file length.
+
+
 ### 2.0.0
-- **Added IAT File Support**: The NachaViewer extension now includes support for viewing and interpreting IAT (International ACH Transaction) files, enhancing compatibility with a broader range of ACH file types.
+- **IAT File Support**: The NachaViewer extension now includes support for viewing and interpreting IAT (International ACH Transaction) files, enhancing compatibility with a broader range of ACH file types.
 
 ### 1.2.0
 - Added SEC code descriptions related to international transactions, acknowledgments, and specialized payment types to enhance coverage and support for various ACH entry classifications.
