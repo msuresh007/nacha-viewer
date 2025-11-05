@@ -20,6 +20,10 @@ Visual Studio Code - latest version
 ## Release Notes
 Please send your suggestions/enhancement requests to msuresh007@gmail.com 
 
+### 3.0.2
+- **Fix in computation when Padded lines are present**: Fixed the computation logic to ignore padded lines, while computing debits and credits.
+
+
 ### 3.0.1
 - **Padded Lines Support**: The NachaViewer extension now supports handling padded lines, which are used to ensure ACH files conform to fixed-length record formats by padding lines to meet the required file length.
 
