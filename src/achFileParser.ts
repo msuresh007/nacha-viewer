@@ -108,6 +108,9 @@ export class AchFileParser {
             
             if (this.checkIfPaddedLine(i)) {
                 //this is a padded line, so skip the validation for this line
+                //delete this line from the array
+                this._indLines.splice(i, 1);
+                --i; //decrement i as the array length has decreased by 1
                 continue;
             }
 
